@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text RPG Adventure</title>
+    {% load static %} {# Load the static files tag library #}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"> {# Link to your CSS file #}
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>The Lost Caverns RPG</h1>
+            <p>A simple text adventure</p>
+        </header>
+
+        <main class="game-area">
+            <div class="main-scene">
+                <h2>Current Scene</h2>
+                <p>{{ scene_text }}</p>
+
+                <div class="choices">
+                    <h3>What do you do?</h3>
+                    {% for choice in choices %}
+                        <a href="{{ choice.url }}" class="button">{{ choice.text }}</a>
+                    {% empty %}
+                        <p>No choices available.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <aside class="sidebar">
+                <div class="stat-box">
+                    <h3>Character</h3>
+                    <p><strong>Name:</strong> {{ character_name }}</p>
+                    <p><strong>Health:</strong> <span class="health">{{ character_health }}</span></p>
+                    <p><strong>Mana:</strong> {{ character_mana }}</p>
+                    <p><strong>Gold:</strong> {{ character_gold }}</p>
+                </div>
+
+                <div class="stat-box inventory-box">
+                    <h3>Inventory</h3>
+                    {% if inventory %}
+                        <ul>
+                            {% for item in inventory %}
+                                <li>{{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Your inventory is empty.</p>
+                    {% endif %}
+                </div>
+            </aside>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Text RPG Inc.</p>
+        </footer>
+    </div>
+</body>
+</html>
