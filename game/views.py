@@ -1,48 +1,56 @@
 # game/views.py
+import pickle
+import base64
+from django.shortcuts import render, redirect
+from .Game import Game
+from .Player import Player
+from .World import World
 
-from django.shortcuts import render
+def game_scene(request, scene_name=None):
+    if 'game_state' not in request.session:
+        game = Game()
+        player = game.create_player("Hero")
+        world = World(player, game)
+    else:
+        game_state = request.session['game_state']
+        player = pickle.loads(base64.b64decode(game_state['player']))
+        world = pickle.loads(base64.b64decode(game_state['world']))
 
-def game_scene(request):
-    # This dictionary will hold all the data to be sent to the template
+    scene = world.get_current_scene()
+    
+    # Save the updated state
+    request.session['game_state'] = {
+        'player': base64.b64encode(pickle.dumps(player)).decode('utf-8'),
+        'world': base64.b64encode(pickle.dumps(world)).decode('utf-8')
+    }
+
     context = {
-        'scene_text': "You find yourself in a dimly lit cavern. A faint glow emanates from a passage to the north. A cold draft suggests another path to the west.",
-        'choices': [
-            {'text': "Go North", 'url': "/north"},
-            {'text': "Go West", 'url': "/west"},
-            {'text': "Examine the cavern", 'url': "/examine"},
-        ],
-        'character_name': "Hero McHeroFace",
-        'character_health': 85,
-        'character_mana': 45,
-        'character_gold': 120,
-        'inventory': [
-            "Rusty Sword",
-            "Leather Armor",
-            "Healing Potion (x2)",
-            "Torch",
-            "Mysterious Orb",
-        ]
+        'scene_text': scene['text'],
+        'choices': scene['choices'],
+        'scene_name': world.current_location or 'start',
+        'character_name': player.name,
+        'character_health': player.get_health(),
+        'character_mana': 0,  # Your Player class doesn't have mana
+        'character_gold': player.gold_pouch,
+        'inventory': [item.to_string() for item in player.inventory] if hasattr(player, 'inventory') else []
     }
     return render(request, 'game/scene.html', context)
 
-# You can add more view functions here for different scenes/actions
-def north_path(request):
-    context = {
-        'scene_text': "You venture north into the glowing passage. The air grows warmer, and the walls begin to shimmer with arcane energy. You hear a low rumble...",
-        'choices': [
-            {'text': "Continue deeper", 'url': "/deeper"},
-            {'text': "Turn back", 'url': "/"},
-        ],
-        'character_name': "Hero McHeroFace",
-        'character_health': 80, # Health might change after an action
-        'character_mana': 40,
-        'character_gold': 120,
-        'inventory': [
-            "Rusty Sword",
-            "Leather Armor",
-            "Healing Potion (x2)",
-            "Torch",
-            "Mysterious Orb",
-        ]
-    }
-    return render(request, 'game/scene.html', context)
+def make_choice(request, scene_name, choice_index):
+    if 'game_state' not in request.session:
+        return redirect('game_scene')
+
+    game_state = request.session['game_state']
+    player = pickle.loads(base64.b64decode(game_state['player']))
+    world = pickle.loads(base64.b64decode(game_state['world']))
+
+    scene = world.handle_choice(choice_index - 1)
+
+    # If handle_choice returns a new scene, we update the context with it
+    if scene:
+        request.session['game_state'] = {
+            'player': base64.b64encode(pickle.dumps(player)).decode('utf-8'),
+            'world': base64.b64encode(pickle.dumps(world)).decode('utf-8')
+        }
+
+    return redirect('game_scene')
