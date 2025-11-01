@@ -21,11 +21,13 @@
 
                 <div class="choices">
                     <h3>What do you do?</h3>
-                    {% for choice in choices %}
-                        <a href="{{ choice.url }}" class="button">{{ choice.text }}</a>
-                    {% empty %}
-                        <p>No choices available.</p>
-                    {% endfor %}
+                    <ol>
+                        {% for choice in choices %}
+                            <li><a href="{% url 'make_choice' scene_name=scene_name choice_index=forloop.counter %}">{{ choice }}</a></li>
+                        {% empty %}
+                            <p>No choices available.</p>
+                        {% endfor %}
+                    </ol>
                 </div>
             </div>
 
