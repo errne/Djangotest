@@ -43,7 +43,7 @@ class Room:
         if choice == "Attack":
             result = battle.fight_turn()
             if not self.player.is_alive:
-                return {'text': "You have been defeated!", 'choices': ["Game Over"]}
+                return {'game_over': True}
             if enemy.hp < 1:
                 self.add_gold_to_treasure_chest()
                 self.current_enemy_index += 1

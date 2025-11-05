@@ -10,7 +10,7 @@ body {
 }
 
 .game-container {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 20px auto;
     background-color: #2b2b2b;
     border: 1px solid #444;
@@ -89,7 +89,7 @@ header p {
 .sidebar {
     flex: 1; /* Takes less space */
     padding-left: 20px;
-    min-width: 200px; /* Ensure it doesn't get too small */
+    min-width: 400px; /* Ensure it doesn't get too small */
 }
 
 .stat-box {
@@ -137,6 +137,19 @@ header p {
     border-bottom: none;
 }
 
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 5px;
+}
+
+.inventory-slot {
+    border: 1px solid #fff;
+    height: 50px;
+    width: 50px;
+}
+
 footer {
     background-color: #3a3a3a;
     padding: 15px;
@@ -163,4 +176,14 @@ footer {
     .sidebar {
         padding-left: 0;
     }
+}
+
+.choices ol li a {
+    color: white;
+    text-decoration: none;
+}
+
+.choices ol li a:hover {
+    color: white;
+    text-decoration: underline;
 }
