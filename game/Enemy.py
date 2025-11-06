@@ -3,7 +3,6 @@ import random
 
 class Enemy:
     max_hp = 75
-    is_alive = True
     types = ["Undead", "Humanoid", "Animal"]
     names_for_undead = ["Zombie", "Vampire", "Forsaken", "Skeleton"]
     names_for_animals = ["Cave Bear", "Cave Wolf", "Lizard", "Giant Bat"]
@@ -11,6 +10,7 @@ class Enemy:
     all_names = [names_for_undead, names_for_humanoids, names_for_animals]
 
     def __init__(self):
+        self.is_alive = True
         self.random_for_type = random.randint(0, len(self.types) - 1)
         self.random_for_name = random.randint(0, 3)
         self.type = self.types[self.random_for_type]

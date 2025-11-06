@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text RPG Adventure - Game Over</title>
+    {% load static %} {# Load the static files tag library #}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"> {# Link to your CSS file #}
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>Game Over</h1>
+        </header>
+
+        <main class="game-area">
+            <div class="main-scene">
+                <h2>You have been defeated!</h2>
+                <a href="{% url 'start_game' %}">Play Again</a>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Text RPG Inc.</p>
+        </footer>
+    </div>
+</body>
+</html>

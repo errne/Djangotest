@@ -4,6 +4,10 @@ from .Armour import Armour
 from .ArmourMaterials import ArmourMaterials
 from .ArmourTypes import ArmourTypes
 
+from .Weapon import Weapon
+from .MaterialTypes import MaterialTypes
+from .WeaponTypes import WeaponTypes
+
 class Battle:
     def __init__(self, player, enemy):
         self.player = player
@@ -11,6 +15,7 @@ class Battle:
         self.health_potion_drop_chance = 95
         self.attack_potion_drop_chance = 25
         self.armour_drop_chance = 75
+        self.weapon_drop_chance = 50
 
     def fight_turn(self):
         damage_dealt = self.player.deal_damage()
@@ -40,7 +45,11 @@ class Battle:
             self.player.num_attack_pots += 1
             loot_result += f"# You now have {self.player.num_attack_pots} attack potion(s). #\n"
 
-        if random.randint(1, 100) < self.armour_drop_chance:
+        if random.randint(1, 100) < self.weapon_drop_chance:
+            weapon = self.generate_weapon_drop()
+            loot_result += f"# The {self.enemy.name} dropped a {weapon.to_string()}. #\n"
+            self.player.add_item_to_inventory(weapon)
+        elif random.randint(1, 100) < self.armour_drop_chance:
             armour = self.generate_drop()
             loot_result += f"# The {self.enemy.name} dropped a {armour.to_string()}. #\n"
             self.player.add_item_to_inventory(armour)
@@ -61,3 +70,6 @@ class Battle:
         armour_type = random.choice(ArmourTypes.create_list(self))
         armour_material = random.choice([ArmourMaterials.LEATHER, ArmourMaterials.CLOTH])
         return Armour(armour_material, armour_type)
+
+    def generate_weapon_drop(self):
+        return Weapon(MaterialTypes.WOOD, WeaponTypes.SWORD, image='images/wooden_sword.png')

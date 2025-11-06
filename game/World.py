@@ -8,6 +8,7 @@ class World:
         self.player = player
         self.game = game
         self.current_location = None  # Can be 'room', 'shop', 'event', or None
+        self.current_sub_location = None
         self.current_event = None
 
     def get_current_scene(self):
@@ -18,7 +19,12 @@ class World:
             }
         elif self.current_location == 'shop':
             shop = self.current_event
-            return shop.get_shop_menu()
+            if self.current_sub_location == 'buy':
+                return shop.get_buy_menu()
+            elif self.current_sub_location == 'sell':
+                return shop.get_sell_menu(self.player)
+            else:
+                return shop.get_shop_menu()
         elif self.current_location == 'room':
             room = self.current_event
             return room.handle_combat_turn(None) # Get initial combat scene
@@ -37,18 +43,40 @@ class World:
                 return {'text': "Game saved. Thanks for playing!", 'choices': []}
         elif self.current_location == 'shop':
             shop = self.current_event
-            # This is a simplified logic, you might need to handle sub-menus
-            if choice_index == 0: # Buy
-                return shop.get_buy_menu()
-            elif choice_index == 1: # Sell
-                return shop.get_sell_menu(self.player)
-            else: # Leave
-                self.current_location = None
-                return self.get_current_scene()
+            if self.current_sub_location is None: # Main menu
+                if choice_index == 0: # Buy
+                    self.current_sub_location = 'buy'
+                    return shop.get_buy_menu()
+                elif choice_index == 1: # Sell
+                    self.current_sub_location = 'sell'
+                    return shop.get_sell_menu(self.player)
+                else: # Leave
+                    self.current_location = None
+                    self.current_sub_location = None
+                    return self.get_current_scene()
+            elif self.current_sub_location == 'buy':
+                if choice_index == len(shop.weapons): # Back to main menu
+                    self.current_sub_location = None
+                    return shop.get_shop_menu()
+                else:
+                    result = shop.buy_item(self.player, choice_index)
+                    return {'text': result, 'choices': shop.get_buy_menu()['choices']}
+            elif self.current_sub_location == 'sell':
+                if not self.player.inventory or choice_index == len(self.player.inventory): # Back to main menu
+                    self.current_sub_location = None
+                    return shop.get_shop_menu()
+                else:
+                    result = shop.sell_item(self.player, choice_index)
+                    return {'text': result, 'choices': shop.get_sell_menu(self.player)['choices']}
         elif self.current_location == 'room':
             room = self.current_event
-            choice = room.handle_combat_turn(None)['choices'][choice_index]
+            scene = room.handle_combat_turn(None)
+            if scene.get('game_over'):
+                return scene
+            choice = scene['choices'][choice_index]
             scene = room.handle_combat_turn(choice)
+            if scene.get('game_over'):
+                return scene
             if scene['choices'] == ["Leave room"]:
                 self.current_location = None
             return scene

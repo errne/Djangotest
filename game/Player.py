@@ -8,18 +8,17 @@ from .WeaponTypes import WeaponTypes
 
 class Player:
     base_attack_damage = 10
-    num_health_pots = 3
-    num_attack_pots = 0
-    gold_pouch = 0
-    is_alive = True
-
     def __init__(self, name):
         self.__health = 100
         self.__armour_slots = {"Helm": None, "Chest": None, "Trousers": None, "Boots": None}
         self.name = name
-        self.weapon = Weapon(MaterialTypes.WOOD, WeaponTypes.SWORD)
+        self.weapon = Weapon(MaterialTypes.WOOD, WeaponTypes.SWORD, image='images/wooden_sword.png')
         self.max_attack_damage = self.base_attack_damage + self.weapon.max_damage
         self.inventory = []
+        self.gold_pouch = 0
+        self.num_health_pots = 3
+        self.num_attack_pots = 0
+        self.is_alive = True
 
     def get_health(self):
         return self.__health
