@@ -51,7 +51,6 @@ def game_scene(request, scene_name=None):
         'scene_name': world.current_location or 'start',
         'character_name': player.name,
         'character_health': player.get_health(),
-        'character_mana': 0,  # Your Player class doesn't have mana
         'character_gold': player.gold_pouch,
         'inventory_grid': grid,
     }
