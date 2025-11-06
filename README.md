@@ -17,3 +17,6 @@ To run the development server, follow these steps:
     ```
 
 The application will be available at `http://127.0.0.1:8000/`.
+
+Sword image is from:
+<a href="https://www.flaticon.com/free-icons/weapon" title="weapon icons">Weapon icons created by Freepik - Flaticon</a>
