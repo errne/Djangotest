@@ -10,14 +10,18 @@
 <body>
     <div class="game-container">
         <header>
-            <h1>The Lost Caverns RPG</h1>
+            <h1>The Lost Caverns Adventures</h1>
             <p>A simple text adventure</p>
         </header>
 
         <main class="game-area">
             <div class="main-scene">
                 <h2>Current Scene</h2>
-                <p>{{ scene_text }}</p>
+                <div class="messages">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
 
                 <div class="choices">
                     <h3>What do you do?</h3>
@@ -37,6 +41,10 @@
                     <p><strong>Name:</strong> {{ character_name }}</p>
                     <p><strong>Health:</strong> <span class="health">{{ character_health }}</span></p>
                     <p><strong>Gold:</strong> {{ character_gold }}</p>
+                    <p><strong>Health Potions:</strong> {{ character_health_pots }}</p>
+                    <p><strong>Attack Potions:</strong> {{ character_attack_pots }}</p>
+                    <p><strong>Attack Rating:</strong> {{ character_attack_rating }}</p>
+                    <p><strong>Armour Rating:</strong> {{ character_armour_rating }}</p>
                 </div>
 
                 <div class="stat-box inventory-box">
@@ -57,7 +65,7 @@
         </main>
 
         <footer>
-            <p>&copy; 2025 Text RPG Inc.</p>
+            <p>&copy; 2025 Errne's Games</p>
         </footer>
     </div>
 </body>

@@ -8,10 +8,11 @@ from .WeaponTypes import WeaponTypes
 
 class Player:
     base_attack_damage = 10
-    def __init__(self, name):
+    def __init__(self, name, game):
         self.__health = 100
         self.__armour_slots = {"Helm": None, "Chest": None, "Trousers": None, "Boots": None}
         self.name = name
+        self.game = game
         self.weapon = Weapon(MaterialTypes.WOOD, WeaponTypes.SWORD, image='images/wooden_sword.png')
         self.max_attack_damage = self.base_attack_damage + self.weapon.max_damage
         self.inventory = []
@@ -33,7 +34,7 @@ class Player:
             if self.num_health_pots <= 0:
                 self.num_health_pots = 0
         else:
-            print("\t> You do not have any health potions, defeat enemies for a chance to get one")
+            self.game.messages.append("\t> You do not have any health potions, defeat enemies for a chance to get one")
 
     def health_potion_heal(self):
         self.__health += 30
@@ -47,13 +48,13 @@ class Player:
             if self.num_attack_pots <= 0:
                 self.num_attack_pots = 0
         else:
-            print("\t> You do not have any attack potions, defeat enemies for a chance to get one")
+            self.game.messages.append("\t> You do not have any attack potions, defeat enemies for a chance to get one")
 
     def attack_potion_boost(self):
         self.base_attack_damage += 5
         if self.base_attack_damage > 45:
             self.base_attack_damage = 45
-            print("Your maximum damage cannot go any higher")
+            self.game.messages.append("Your maximum damage cannot go any higher")
         self.set_max_attack_damage()
 
     def deal_damage(self):
@@ -76,24 +77,31 @@ class Player:
             self.gold_pouch -= price
             self.equip_new_weapon(weapon)
         else:
-            print("You do not have enough gold for this purchase")
+            self.game.messages.append("You do not have enough gold for this purchase")
             return
 
     def equip_new_weapon(self, weapon):
         self.inventory.append(self.weapon)
         self.weapon = weapon
         self.set_max_attack_damage()
-        print(f"You have equipped {self.weapon.to_string()}")
+        self.game.messages.append(f"You have equipped {self.weapon.to_string()}")
 
     def equip_new_armour(self, armour):
+        slot_to_equip = None
         if armour.armour_type == ArmourTypes.BOOTS:
-            self.__armour_slots["Boots"] = armour
+            slot_to_equip = "Boots"
         elif armour.armour_type == ArmourTypes.HELM:
-            self.__armour_slots["Helm"] = armour
+            slot_to_equip = "Helm"
         elif armour.armour_type == ArmourTypes.TROUSERS:
-            self.__armour_slots["Trousers"] = armour
+            slot_to_equip = "Trousers"
         elif armour.armour_type == ArmourTypes.CHEST:
-            self.__armour_slots["Chest"] = armour
+            slot_to_equip = "Chest"
+
+        if slot_to_equip:
+            if self.__armour_slots[slot_to_equip]:
+                self.inventory.append(self.__armour_slots[slot_to_equip])
+            self.__armour_slots[slot_to_equip] = armour
+            self.inventory.remove(armour)
 
     def get_total_armour_level(self):
         total_armour_value = 0
@@ -115,18 +123,19 @@ class Player:
             total_income += item.price
         self.add_gold_to_pouch(total_income)
         self.inventory.clear()
-        print(f"You sold your item and got {total_income} gold")
+        self.game.messages.append(f"You sold your item and got {total_income} gold")
+
+    def get_armour_from_inventory(self):
+        from .Armour import Armour
+        return [item for item in self.inventory if isinstance(item, Armour)]
 
     def check_inventory(self):
-        inventory_string = f"You have {self.gold_pouch} gold.\n"
-        if not self.inventory:
-            inventory_string += "Your inventory is empty."
-            return inventory_string
-        inventory_list = ""
-        for item in self.inventory:
-            item_name = item.to_string()
-            inventory_list += item_name + ", "
-        inventory_list = inventory_list[:-2]
-        inventory_string += "Your inventory contains: " + inventory_list
-        return inventory_string
+        equipped_items = []
+        if self.weapon:
+            equipped_items.append(self.weapon)
+        for armour in self.__armour_slots.values():
+            if armour:
+                equipped_items.append(armour)
+        
+        return self.inventory, equipped_items
 
