@@ -32,6 +32,8 @@ def game_scene(request, scene_name=None):
         player.gold_pouch = 0
 
     scene = world.get_current_scene()
+    messages = world.game.messages.copy()
+    world.game.messages.clear()
 
     inventory = player.inventory
     grid = []
@@ -46,12 +48,16 @@ def game_scene(request, scene_name=None):
         grid.append(row)
 
     context = {
-        'scene_text': scene['text'],
+        'messages': messages,
         'choices': scene['choices'],
         'scene_name': world.current_location or 'start',
         'character_name': player.name,
         'character_health': player.get_health(),
         'character_gold': player.gold_pouch,
+        'character_health_pots': player.num_health_pots,
+        'character_attack_pots': player.num_attack_pots,
+        'character_attack_rating': player.max_attack_damage,
+        'character_armour_rating': player.get_total_armour_level(),
         'inventory_grid': grid,
     }
     return render(request, 'game/scene.html', context)
@@ -75,6 +81,9 @@ def make_choice(request, scene_name, choice_index):
         request.session.flush()
         return redirect('game_over')
 
+    messages = world.game.messages.copy()
+    world.game.messages.clear()
+
     # Save the updated world object back to the session
     request.session['game_state'] = {
         'world': base64.b64encode(pickle.dumps(world)).decode('utf-8')
@@ -93,13 +102,17 @@ def make_choice(request, scene_name, choice_index):
         grid.append(row)
 
     context = {
-        'scene_text': scene['text'],
+        'messages': messages,
         'choices': scene['choices'],
         'scene_name': world.current_location or 'start',
         'character_name': player.name,
         'character_health': player.get_health(),
         'character_mana': 0,  # Your Player class doesn't have mana
         'character_gold': player.gold_pouch,
+        'character_health_pots': player.num_health_pots,
+        'character_attack_pots': player.num_attack_pots,
+        'character_attack_rating': player.max_attack_damage,
+        'character_armour_rating': player.get_total_armour_level(),
         'inventory': player.inventory,
         'inventory_grid': grid,
     }
