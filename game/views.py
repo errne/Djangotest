@@ -50,7 +50,7 @@ def game_scene(request, scene_name=None):
     context = {
         'messages': messages,
         'choices': scene['choices'],
-        'scene_name': world.current_location or 'start',
+        'scene_name': type(world.current_state).__name__,
         'character_name': player.name,
         'character_health': player.get_health(),
         'character_gold': player.gold_pouch,
@@ -104,7 +104,7 @@ def make_choice(request, scene_name, choice_index):
     context = {
         'messages': messages,
         'choices': scene['choices'],
-        'scene_name': world.current_location or 'start',
+        'scene_name': type(world.current_state).__name__,
         'character_name': player.name,
         'character_health': player.get_health(),
         'character_mana': 0,  # Your Player class doesn't have mana
