@@ -14,5 +14,5 @@ class Weapon:
         return self.material_type.name.capitalize() + " " + self.weapon_type.name.lower()
 
     def generate_price(self):
-        price = self.max_damage * 1.5
+        price = self.max_damage * 2
         return price

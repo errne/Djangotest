@@ -46,6 +46,7 @@ class World:
             return {'choices': choices}
         elif self.current_location == 'event':
             event = self.current_event
+            self.game.messages.append(event.event_greeting())
             return event.event_task()
 
     def handle_choice(self, choice_index):
@@ -143,7 +144,7 @@ class World:
             self.current_location = 'room'
             self.current_event = self.generate_room()
             return self.get_current_scene()
-        elif random_no <= 65:
+        elif random_no <= 75:
             self.current_location = 'shop'
             self.current_event = self.generate_shop()
             return self.get_current_scene()
@@ -158,7 +159,7 @@ class World:
             }
 
     def generate_shop(self):
-        name_list = ["Zossy's Sharpies", "Bran's Boom-Booms", "Mesmash Things", "Swords Galore", "Pick'a'Sord", "Weaponsbury"]
+        name_list = ["Zossy's Sharpies", "Bran's Boom-Booms", "Mesmash Things", "Swords Galore", "Pick'a'Sord", "Weaponsbury", "Bear Sword"]
         name = random.choice(name_list)
         return Shop(name, self.game)
 

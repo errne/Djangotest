@@ -24,7 +24,6 @@ class RandomEvent:
         }
 
     def get_choices(self):
-        # In a real game, you'd generate more believable wrong answers
         return [str(self.correct_answer), str(self.correct_answer + random.randint(1, 5)), str(self.correct_answer - random.randint(1, 5))]
 
     def check_answer(self, answer):
