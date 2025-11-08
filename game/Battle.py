@@ -68,4 +68,7 @@ class Battle:
         return Armour(armour_material, armour_type)
 
     def generate_weapon_drop(self):
-        return Weapon(MaterialTypes.WOOD, WeaponTypes.SWORD, image='images/wooden_sword.png')
+        # Testing drop with images
+        weapon_material= random.choice([MaterialTypes.WOOD, MaterialTypes.IRON, MaterialTypes.STEEL, MaterialTypes.MITHRIL])
+        weapon_image = f'images/{weapon_material.name.lower()}_sword.png'
+        return Weapon(weapon_material, WeaponTypes.SWORD, image=weapon_image)

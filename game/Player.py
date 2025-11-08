@@ -13,7 +13,7 @@ class Player:
         self.__armour_slots = {"Helm": None, "Chest": None, "Trousers": None, "Boots": None}
         self.name = name
         self.game = game
-        self.weapon = Weapon(MaterialTypes.WOOD, WeaponTypes.SWORD, image='images/wooden_sword.png')
+        self.weapon = Weapon(MaterialTypes.WOOD, WeaponTypes.SWORD, image='images/wood_sword.png')
         self.max_attack_damage = self.base_attack_damage + self.weapon.max_damage
         self.inventory = []
         self.gold_pouch = 0
