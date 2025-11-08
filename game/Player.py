@@ -81,7 +81,14 @@ class Player:
             return
 
     def equip_new_weapon(self, weapon):
-        self.inventory.append(self.weapon)
+        # If there's an old weapon, put it back in the inventory
+        if self.weapon:
+            self.inventory.append(self.weapon)
+        
+        # Remove the new weapon from the inventory if it's there
+        if weapon in self.inventory:
+            self.inventory.remove(weapon)
+
         self.weapon = weapon
         self.set_max_attack_damage()
         self.game.messages.append(f"You have equipped {self.weapon.to_string()}")
@@ -128,6 +135,10 @@ class Player:
     def get_armour_from_inventory(self):
         from .Armour import Armour
         return [item for item in self.inventory if isinstance(item, Armour)]
+
+    def get_weapons_from_inventory(self):
+        from .Weapon import Weapon
+        return [item for item in self.inventory if isinstance(item, Weapon)]
 
     def check_inventory(self):
         equipped_items = []
