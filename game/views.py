@@ -1,10 +1,14 @@
 # game/views.py
 import pickle
 import base64
+import logging
 from django.shortcuts import render, redirect
 from .Game import Game
 from .Player import Player
 from .World import World
+
+logger = logging.getLogger(__name__)
+
 
 def start_game(request):
     return render(request, 'game/start.html')
@@ -12,6 +16,7 @@ def start_game(request):
 def new_game(request):
     if request.method == 'POST':
         player_name = request.POST.get('player_name', 'Hero')
+        logger.info(f"Starting new game for player: {player_name}")
         game = Game()
         player = game.create_player(player_name)
         world = World(player, game)
@@ -75,6 +80,7 @@ def make_choice(request, scene_name, choice_index):
     if not hasattr(player, 'gold_pouch'):
         player.gold_pouch = 0
 
+    logger.info(f"Player {player.name} chose option {choice_index} in scene {scene_name}")
     scene = world.handle_choice(choice_index - 1)
 
     if scene and scene.get('game_over'):
