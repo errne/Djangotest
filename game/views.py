@@ -5,6 +5,7 @@ import logging
 from django.shortcuts import render, redirect
 from .Game import Game
 from .Player import Player
+from .Reputation import ReputationManager
 from .World import World
 
 logger = logging.getLogger(__name__)
@@ -123,3 +124,55 @@ def make_choice(request, scene_name, choice_index):
         'inventory_grid': grid,
     }
     return render(request, 'game/scene.html', context)
+
+def inventory_view(request):
+    if 'game_state' not in request.session:
+        return redirect('start_game')
+
+    game_state = request.session['game_state']
+    world = pickle.loads(base64.b64decode(game_state['world']))
+    player = world.player
+
+    # Prepare inventory grid similar to game_scene
+    inventory = player.inventory
+    grid = []
+    for i in range(4):
+        row = []
+        for j in range(6):
+            index = i * 6 + j
+            if index < len(inventory):
+                row.append(inventory[index])
+            else:
+                row.append(None)
+        grid.append(row)
+
+    context = {
+        'character_name': player.name,
+        'character_health': player.get_health(),
+        'character_gold': player.gold_pouch,
+        'inventory_grid': grid,
+    }
+    return render(request, 'game/inventory.html', context)
+
+def journal_view(request):
+    if 'game_state' not in request.session:
+        return redirect('start_game')
+
+    game_state = request.session['game_state']
+    world = pickle.loads(base64.b64decode(game_state['world']))
+    player = world.player
+
+    # Convert reputation points to display levels
+    reputation_display = {}
+    for faction, points in player.reputation.items():
+        reputation_display[faction] = ReputationManager.get_level_from_points(points)
+
+    context = {
+        'character_name': player.name,
+        'character_health': player.get_health(),
+        'character_gold': player.gold_pouch,
+        'character_attack_rating': player.max_attack_damage,
+        'character_armour_rating': player.get_total_armour_level(),
+        'reputation': reputation_display,
+    }
+    return render(request, 'game/journal.html', context)

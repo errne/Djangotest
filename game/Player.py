@@ -1,6 +1,7 @@
 import random
 
 from .ArmourTypes import ArmourTypes
+from .Reputation import ReputationManager
 from .Weapon import Weapon
 from .MaterialTypes import MaterialTypes
 from .WeaponTypes import WeaponTypes
@@ -20,12 +21,28 @@ class Player:
         self.num_health_pots = 3
         self.num_attack_pots = 0
         self.is_alive = True
+        self.reputation = {
+            "Shopkeepers": None,  # Stored as points, None means "Unknown"
+            "Wiseman": None,
+        }
 
     def get_health(self):
         return self.__health
 
     def set_max_attack_damage(self):
         self.max_attack_damage = self.base_attack_damage + self.weapon.max_damage
+
+    def change_reputation(self, faction, points):
+        """
+        Changes the player's reputation with a given faction.
+        If the reputation is "Unknown" (None), it's initialized to Neutral (0) first.
+        """
+        if self.reputation.get(faction) is None:
+            self.reputation[faction] = 0  # First contact, set to Neutral
+        
+        self.reputation[faction] += points
+        # Optional: Add caps to reputation scores if needed
+        # e.g., self.reputation[faction] = max(-100, min(100, self.reputation[faction]))
 
     def drink_health_potion(self):
         if self.num_health_pots > 0:
@@ -76,6 +93,7 @@ class Player:
         if price <= self.gold_pouch:
             self.gold_pouch -= price
             self.equip_new_weapon(weapon)
+            self.change_reputation("Shopkeepers", ReputationManager.BUY_ITEM)
         else:
             self.game.messages.append("You do not have enough gold for this purchase")
             return
@@ -125,12 +143,17 @@ class Player:
         self.inventory.append(item)
 
     def sell_all_inventory(self):
+        if not self.inventory:
+            self.game.messages.append("Your inventory is empty.")
+            return
+            
         total_income = 0
         for item in self.inventory:
             total_income += item.price
         self.add_gold_to_pouch(total_income)
         self.inventory.clear()
-        self.game.messages.append(f"You sold your item and got {total_income} gold")
+        self.change_reputation("Shopkeepers", ReputationManager.SELL_ITEM * len(self.inventory))
+        self.game.messages.append(f"You sold your items and got {total_income} gold")
 
     def get_armour_from_inventory(self):
         from .Armour import Armour
