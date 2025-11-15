@@ -9,4 +9,6 @@ urlpatterns = [
     path('game/', views.game_scene, name='game_scene'),
     path('game_over/', views.game_over, name='game_over'),
     path('choice/<str:scene_name>/<int:choice_index>/', views.make_choice, name='make_choice'),
+    path('inventory/', views.inventory_view, name='inventory_view'),
+    path('journal/', views.journal_view, name='journal_view'),
 ]
