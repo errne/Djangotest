@@ -1,4 +1,5 @@
 import random
+import logging
 
 from .ArmourTypes import ArmourTypes
 from .Reputation import ReputationManager
@@ -6,6 +7,7 @@ from .Weapon import Weapon
 from .MaterialTypes import MaterialTypes
 from .WeaponTypes import WeaponTypes
 
+player_logger = logging.getLogger(__name__)
 
 class Player:
     base_attack_damage = 10
@@ -94,6 +96,7 @@ class Player:
             self.gold_pouch -= price
             self.equip_new_weapon(weapon)
             self.change_reputation("Shopkeepers", ReputationManager.BUY_ITEM)
+            player_logger.info(f"Player {self.name} bought {weapon.to_string()}. Shopkeepers reputation changed by {ReputationManager.BUY_ITEM} to {self.reputation['Shopkeepers']} points.")
         else:
             self.game.messages.append("You do not have enough gold for this purchase")
             return
@@ -148,11 +151,14 @@ class Player:
             return
             
         total_income = 0
+        num_items_sold = len(self.inventory)
         for item in self.inventory:
             total_income += item.price
         self.add_gold_to_pouch(total_income)
         self.inventory.clear()
-        self.change_reputation("Shopkeepers", ReputationManager.SELL_ITEM * len(self.inventory))
+        reputation_change = ReputationManager.SELL_ITEM * num_items_sold
+        self.change_reputation("Shopkeepers", reputation_change)
+        player_logger.info(f"Player {self.name} sold {num_items_sold} items. Shopkeepers reputation changed by {reputation_change} to {self.reputation['Shopkeepers']} points.")
         self.game.messages.append(f"You sold your items and got {total_income} gold")
 
     def get_armour_from_inventory(self):
@@ -172,4 +178,3 @@ class Player:
                 equipped_items.append(armour)
         
         return self.inventory, equipped_items
-
