@@ -101,6 +101,19 @@ class Player:
             self.game.messages.append("You do not have enough gold for this purchase")
             return
 
+    def sell_item(self, item_index):
+        if item_index < len(self.inventory):
+            item = self.inventory[item_index]
+            self.add_gold_to_pouch(item.price)
+            self.inventory.pop(item_index)
+            
+            self.change_reputation("Shopkeepers", ReputationManager.SELL_ITEM)
+            player_logger.info(f"Player {self.name} sold {item.to_string()}. Shopkeepers reputation changed by {ReputationManager.SELL_ITEM} to {self.reputation['Shopkeepers']} points.")
+            self.game.messages.append(f"You sold a {item.to_string()} for {item.price} gold.")
+        else:
+            # This case should ideally be handled by the caller, but as a fallback:
+            self.game.messages.append("Invalid item to sell.")
+
     def equip_new_weapon(self, weapon):
         # If there's an old weapon, put it back in the inventory
         if self.weapon:

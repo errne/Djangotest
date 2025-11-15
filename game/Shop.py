@@ -58,9 +58,6 @@ class Shop:
 
     def sell_item(self, player, item_index):
         if item_index < len(player.inventory):
-            item = player.inventory[item_index]
-            player.add_gold_to_pouch(item.price)
-            player.inventory.pop(item_index)
-            self.game.messages.append(f"You sold a {item.to_string()} for {item.price} gold.")
+            player.sell_item(item_index)
         else:
             self.game.messages.append("Invalid item.")
