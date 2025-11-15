@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Text RPG Adventure{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>The Lost Caverns Adventures</h1>
+            <p>A simple text adventure</p>
+        </header>
+
+        <nav class="menu-bar">
+            {% block menu_bar %}
+                {# Default menu bar content or empty #}
+            {% endblock %}
+        </nav>
+
+        <main class="game-area">
+            {% block main_content %}
+                {# Main content goes here #}
+            {% endblock %}
+
+            {% block sidebar %}
+                {# Sidebar content goes here #}
+            {% endblock %}
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Errne's Games</p>
+        </footer>
+    </div>
+</body>
+</html>
