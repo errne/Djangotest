@@ -1,14 +1,23 @@
 import unittest
 
-from Armour import Armour
-from ArmourMaterials import ArmourMaterials
-from Player import *
+from game.Armour import Armour
+from game.ArmourMaterials import ArmourMaterials
+from game.Player import *
+from game.Weapon import Weapon
+from game.MaterialTypes import MaterialTypes
+from game.WeaponTypes import WeaponTypes
+from game.ArmourTypes import ArmourTypes
 
+
+class MockGame:
+    def __init__(self):
+        self.messages = []
 
 class PlayerTests(unittest.TestCase):
 
     def setUp(self):
-        self.player = Player("Obi")
+        self.game = MockGame()
+        self.player = Player("Obi", self.game)
         self.new_weapon = Weapon(MaterialTypes.STEEL, WeaponTypes.BATTLEAXE)
         self.helm = Armour(ArmourMaterials.LEATHER, ArmourTypes.HELM)
         self.helm2 = Armour(ArmourMaterials.MITHRIL, ArmourTypes.HELM)
@@ -45,6 +54,8 @@ class PlayerTests(unittest.TestCase):
         self.assertEqual(75, self.player.get_health())
 
     def test_can_receive_damage_with_armour(self):
+        self.player.add_item_to_inventory(self.helm)
+        self.player.add_item_to_inventory(self.boots)
         self.player.equip_new_armour(self.helm)
         self.player.equip_new_armour(self.boots)
         self.player.take_damage(15)
@@ -88,17 +99,25 @@ class PlayerTests(unittest.TestCase):
         self.assertEqual(0, self.player.get_total_armour_level())
 
     def test_total_armour_level_with_some_armour(self):
+        self.player.add_item_to_inventory(self.helm)
+        self.player.add_item_to_inventory(self.boots)
         self.player.equip_new_armour(self.helm)
         self.player.equip_new_armour(self.boots)
         self.assertEqual(18, self.player.get_total_armour_level())
 
     def test_equip_armour_over_existing_armour(self):
+        self.player.add_item_to_inventory(self.helm)
+        self.player.add_item_to_inventory(self.boots)
+        self.player.add_item_to_inventory(self.helm2)
         self.player.equip_new_armour(self.helm)
         self.player.equip_new_armour(self.boots)
         self.player.equip_new_armour(self.helm2)
         self.assertEqual(23, self.player.get_total_armour_level())
 
     def test_armour_protection_value(self):
+        self.player.add_item_to_inventory(self.helm)
+        self.player.add_item_to_inventory(self.boots)
+        self.player.add_item_to_inventory(self.helm2)
         self.player.equip_new_armour(self.helm)
         self.player.equip_new_armour(self.boots)
         self.player.equip_new_armour(self.helm2)
@@ -123,8 +142,9 @@ class PlayerTests(unittest.TestCase):
         self.player.add_item_to_inventory(self.helm2)
         self.player.add_item_to_inventory(self.helm2)
         self.player.add_item_to_inventory(self.boots)
-        item_list = self.player.check_inventory()
-        self.assertEqual("Mithril helm, Mithril helm, Steel boots", item_list)
+        inventory, equipped = self.player.check_inventory()
+        self.assertEqual([self.helm2, self.helm2, self.boots], inventory)
+        self.assertEqual([self.player.weapon], equipped)
 
 
 

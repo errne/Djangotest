@@ -29,6 +29,8 @@ class RandomEvent:
     def check_answer(self, answer):
         if int(answer) == self.correct_answer:
             self.player.add_gold_to_pouch(25)
+            self.player.change_reputation("Mathematicians Guild", 3)
             self.game.messages.append("Correct. Your wisdom deserves some gold. 25 gold coins were added to your pouch")
         else:
+            self.player.change_reputation("Mathematicians Guild", -1)
             self.game.messages.append("Incorrect, bye")

@@ -1,7 +1,7 @@
 import unittest
-from Armour import *
-from ArmourMaterials import ArmourMaterials
-from ArmourTypes import ArmourTypes
+from game.Armour import *
+from game.ArmourMaterials import ArmourMaterials
+from game.ArmourTypes import ArmourTypes
 
 
 class ArmourTests(unittest.TestCase):

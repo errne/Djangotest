@@ -1,15 +1,24 @@
 import unittest
-from Player import *
-from Shop import *
-from Armour import *
-from ArmourMaterials import *
+from game.Player import *
+from game.Shop import *
+from game.Armour import *
+from game.ArmourMaterials import *
+from game.Weapon import Weapon
+from game.MaterialTypes import MaterialTypes
+from game.WeaponTypes import WeaponTypes
+from game.ArmourTypes import ArmourTypes
 
+
+class MockGame:
+    def __init__(self):
+        self.messages = []
 
 class ShopTests(unittest.TestCase):
 
     def setUp(self):
-        self.player = Player("Obi")
-        self.shop = Shop("Dragonwares")
+        self.game = MockGame()
+        self.player = Player("Obi", self.game)
+        self.shop = Shop("Dragonwares", self.game)
         self.item1 = Weapon(MaterialTypes.STEEL, WeaponTypes.BATTLEAXE)
         self.item2 = Armour(ArmourMaterials.MITHRIL, ArmourTypes.HELM)
 
@@ -26,12 +35,12 @@ class ShopTests(unittest.TestCase):
     def test_player_selling_all_inventory(self):
         self.player.add_item_to_inventory(self.item1)
         self.player.add_item_to_inventory(self.item2)
-        self.shop.player_selling_all(self.player)
-        self.assertEqual(126, self.player.gold_pouch)
+        self.player.sell_all_inventory()
+        self.assertEqual(154, self.player.gold_pouch)
 
     def test_player_selling_particular_item(self):
         self.player.add_item_to_inventory(self.item1)
         self.player.add_item_to_inventory(self.item2)
-        self.shop.player_selling_particular_item(1, self.player)
+        self.player.sell_item(1)
         self.assertEqual(42, self.player.gold_pouch)
         self.assertEqual(1, len(self.player.inventory))

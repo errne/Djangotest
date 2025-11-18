@@ -25,7 +25,7 @@ class Player:
         self.is_alive = True
         self.reputation = {
             "Shopkeepers": None,  # Stored as points, None means "Unknown"
-            "Wiseman": None,
+            "Mathematicians Guild": None,
         }
 
     def get_health(self):

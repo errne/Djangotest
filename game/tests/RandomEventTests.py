@@ -1,14 +1,14 @@
 import unittest
 
-from Player import Player
-from RandomEvent import *
+from game.Player import Player
+from game.RandomEvent import *
 
 
 class RandomEventTests(unittest.TestCase):
 
     def setUp(self):
-        self.player = Player("Obi")
-        self.event = RandomEvent(1, self.player)
+        self.player = Player("Obi", None)
+        self.event = RandomEvent(1, self.player, None)
 
     def test_event_greeting(self):
         self.assertEqual("Greetings, traveler", self.event.event_greeting())
