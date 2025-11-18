@@ -1,7 +1,7 @@
 import unittest
-from Weapon import *
-from MaterialTypes import *
-from WeaponTypes import *
+from game.Weapon import *
+from game.MaterialTypes import *
+from game.WeaponTypes import *
 
 
 class WeaponTests(unittest.TestCase):

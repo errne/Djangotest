@@ -1,14 +1,19 @@
 import unittest
-from Enemy import *
-from Player import *
-from Room import *
+from game.Enemy import *
+from game.Player import *
+from game.Room import *
 
 
-class EnemyTests(unittest.TestCase):
+class MockGame:
+    def __init__(self):
+        self.messages = []
+
+class RoomTests(unittest.TestCase):
 
     def setUp(self):
-        self.player = Player("Obi")
-        self.room = Room(self.player)
+        self.game = MockGame()
+        self.player = Player("Obi", self.game)
+        self.room = Room(self.player, self.game)
 
     def test_enemy_count(self):
         self.assertEqual(True, self.room.number_of_enemies > 0)
