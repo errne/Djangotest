@@ -1,7 +1,38 @@
 import random
+from .Reputation import ReputationLevel
+
 
 class RandomEvent:
     greetings = ["Hello, there", "Greetings, traveler", "Good day, adventurer"]
+    GUILD_GREETINGS = {
+        ReputationLevel.UNKNOWN: [
+            "Hello, stranger.",
+            "I don’t believe we've met.",
+        ],
+        ReputationLevel.HATED: [
+            "What do you want?",
+            "Stay back. We haven't forgotten what you did.",
+        ],
+        ReputationLevel.DISLIKED: [
+            "Oh… it's you.",
+            "Make it quick.",
+        ],
+        ReputationLevel.NEUTRAL: [
+            "Hello, there.",
+            "Greetings, traveler.",
+            "Good day, adventurer.",
+        ],
+        ReputationLevel.LIKED: [
+            "Ah, good to see you again!",
+            "Welcome back, friend.",
+            "Your presence is always appreciated.",
+        ],
+        ReputationLevel.FRIENDLY: [
+            "Our brightest mind returns!",
+            "Always a pleasure to welcome you!",
+            "You honor the guild with your visit.",
+        ],
+    }
 
     def __init__(self, seed, player, game):
         self.seed = seed
@@ -11,7 +42,10 @@ class RandomEvent:
         self.correct_answer = None
 
     def event_greeting(self):
-        return self.greetings[self.seed]
+        rep = self.player.get_reputation("Mathematicians Guild")
+        options = self.GUILD_GREETINGS[rep]
+        index = self.seed % len(options)
+        return options[index]
 
     def event_task(self):
         questionno1 = random.randint(5, 13)

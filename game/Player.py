@@ -2,7 +2,7 @@ import random
 import logging
 
 from .ArmourTypes import ArmourTypes
-from .Reputation import ReputationManager
+from .Reputation import ReputationManager, ReputationLevel
 from .Weapon import Weapon
 from .MaterialTypes import MaterialTypes
 from .WeaponTypes import WeaponTypes
@@ -24,7 +24,7 @@ class Player:
         self.num_attack_pots = 0
         self.is_alive = True
         self.reputation = {
-            "Shopkeepers": None,  # Stored as points, None means "Unknown"
+            "Shopkeepers": None,
             "Mathematicians Guild": None,
         }
 
@@ -40,11 +40,16 @@ class Player:
         If the reputation is "Unknown" (None), it's initialized to Neutral (0) first.
         """
         if self.reputation.get(faction) is None:
-            self.reputation[faction] = 0  # First contact, set to Neutral
+            self.reputation[faction] = 0
         
         self.reputation[faction] += points
         # Optional: Add caps to reputation scores if needed
         # e.g., self.reputation[faction] = max(-100, min(100, self.reputation[faction]))
+
+    def get_reputation(self, faction):
+        points = self.reputation.get(faction)
+        level_name = ReputationManager.get_level_from_points(points)
+        return ReputationLevel(level_name)
 
     def drink_health_potion(self):
         if self.num_health_pots > 0:
