@@ -47,13 +47,14 @@ class Room:
             if not self.player.is_alive:
                 return {'game_over': True}
             if enemy.hp < 1:
+                enemy.on_death(self.player)
                 self.add_gold_to_treasure_chest()
                 self.current_enemy_index += 1
                 self.game.messages.append("You defeated the enemy!")
                 if self.current_enemy_index >= len(self.enemies):
                     self.loot_treasure_chest()
                     return {'cleared_room': True}
-                return {'choices': ["Next enemy"]}
+                return {'choices': ["Next enemy", "Drink health potion"]}
             return {'choices': ["Attack", "Drink health potion", "Drink attack potion", "Flee"]}
         elif choice == "Drink health potion":
             self.player.drink_health_potion()

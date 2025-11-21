@@ -26,7 +26,9 @@ class Player:
         self.reputation = {
             "Shopkeepers": None,
             "Mathematicians Guild": None,
+            "Thieves Guild": None,
         }
+        self.quests = []
 
     def get_health(self):
         return self.__health
@@ -192,3 +194,22 @@ class Player:
                 equipped_items.append(armour)
         
         return self.inventory, equipped_items
+
+    def add_quest(self, quest):
+        self.quests.append(quest)
+        self.game.messages.append(f"Quest Accepted: {quest.name}")
+
+    def has_quest(self, quest_name):
+        for quest in self.quests:
+            if quest.name == quest_name and not quest.is_completed:
+                return True
+        return False
+
+    def complete_quest(self, quest_name):
+        for quest in self.quests:
+            if quest.name == quest_name and not quest.is_completed:
+                quest.complete()
+                self.add_gold_to_pouch(quest.reward_gold)
+                self.game.messages.append(f"Quest Completed: {quest.name}")
+                self.game.messages.append(f"You received {quest.reward_gold} gold.")
+                return

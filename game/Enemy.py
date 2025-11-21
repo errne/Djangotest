@@ -44,3 +44,6 @@ class Enemy:
 
     def to_string(self):
         return f"You meet a {self.name} who has {self.hp} hp and wants to fight you"
+
+    def on_death(self, player):
+        pass
