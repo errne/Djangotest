@@ -1,5 +1,6 @@
 import random
 from .Reputation import ReputationLevel
+from .Quest import Quest
 
 
 class RandomEvent:
@@ -67,3 +68,31 @@ class RandomEvent:
         else:
             self.player.change_reputation("Mathematicians Guild", -1)
             self.game.messages.append("Incorrect, bye")
+            self.player.change_reputation("Mathematicians Guild", -1)
+            self.game.messages.append("Incorrect, bye")
+
+class QuestEvent:
+    def __init__(self, player, game):
+        self.player = player
+        self.game = game
+        self.choices = ["Accept Quest", "Decline"]
+
+    def event_greeting(self):
+        return "A distraught villager approaches you."
+
+    def event_task(self):
+        self.game.messages.append("Please, help me! Bandits stole my family heirloom. Can you retrieve it?")
+        return {
+            'choices': self.choices
+        }
+    
+    def get_choices(self):
+        return self.choices
+
+    def check_answer(self, choice):
+        if choice == "Accept Quest":
+            quest = Quest("Retrieve Heirloom", "Retrieve the stolen family heirloom from the Thieves Den.", reward_gold=100)
+            self.player.add_quest(quest)
+            self.game.messages.append("You accepted the quest!")
+        else:
+            self.game.messages.append("You walked away.")
