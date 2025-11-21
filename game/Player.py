@@ -35,10 +35,6 @@ class Player:
         self.max_attack_damage = self.base_attack_damage + self.weapon.max_damage
 
     def change_reputation(self, faction, points):
-        """
-        Changes the player's reputation with a given faction.
-        If the reputation is "Unknown" (None), it's initialized to Neutral (0) first.
-        """
         if self.reputation.get(faction) is None:
             self.reputation[faction] = 0
         

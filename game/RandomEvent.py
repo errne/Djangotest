@@ -3,7 +3,6 @@ from .Reputation import ReputationLevel
 
 
 class RandomEvent:
-    greetings = ["Hello, there", "Greetings, traveler", "Good day, adventurer"]
     GUILD_GREETINGS = {
         ReputationLevel.UNKNOWN: [
             "Hello, stranger.",
