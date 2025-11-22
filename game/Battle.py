@@ -45,12 +45,16 @@ class Battle:
 
         if random.randint(1, 100) < self.weapon_drop_chance:
             weapon = self.generate_weapon_drop()
-            self.game.messages.append(f"# The {self.enemy.name} dropped a {weapon.to_string()}. #")
-            self.player.add_item_to_inventory(weapon)
+            if self.player.add_item_to_inventory(weapon):
+                self.game.messages.append(f"# The {self.enemy.name} dropped a {weapon.to_string()}. #")
+            else:
+                self.game.messages.append(f"# The {self.enemy.name} dropped a {weapon.to_string()}, but your inventory is full! #")
         elif random.randint(1, 100) < self.armour_drop_chance:
             armour = self.generate_drop()
-            self.game.messages.append(f"# The {self.enemy.name} dropped a {armour.to_string()}. #")
-            self.player.add_item_to_inventory(armour)
+            if self.player.add_item_to_inventory(armour):
+                self.game.messages.append(f"# The {self.enemy.name} dropped a {armour.to_string()}. #")
+            else:
+                self.game.messages.append(f"# The {self.enemy.name} dropped a {armour.to_string()}, but your inventory is full! #")
 
     def aftermath(self):
         if not self.player.is_alive:
