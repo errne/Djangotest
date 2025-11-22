@@ -48,8 +48,23 @@ class Shop:
         if item_index < len(self.weapons):
             weapon = self.weapons[item_index]
             price = weapon.max_damage * 3
+            
+            # Check if player has space for old weapon (if any)
+            # Player.buy_weapon handles this check now, but we can duplicate it here for better UX or rely on Player
+            # Player.buy_weapon returns None, so we can't check return value easily unless we modify it.
+            # But Player.buy_weapon appends a message if it fails.
+            
             if player.gold_pouch >= price:
+                # We can check limit here too
+                if player.weapon and len(player.inventory) >= player.inventory_limit:
+                     self.game.messages.append("Inventory full! Cannot unequip current weapon.")
+                     return
+
                 player.buy_weapon(weapon, price)
+                # We should only append "You bought..." if it succeeded.
+                # Since we checked the condition above, it should succeed unless something else is wrong.
+                # But wait, player.buy_weapon appends "You have equipped..."
+                # We can append "You bought..." here.
                 self.game.messages.append(f"You bought a {weapon.to_string()}")
             else:
                 self.game.messages.append("You don't have enough gold.")
