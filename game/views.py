@@ -176,3 +176,23 @@ def journal_view(request):
         'reputation': reputation_display,
     }
     return render(request, 'game/journal.html', context)
+
+def quests_view(request):
+    if 'game_state' not in request.session:
+        return redirect('start_game')
+
+    game_state = request.session['game_state']
+    world = pickle.loads(base64.b64decode(game_state['world']))
+    player = world.player
+
+    active_quests = [q for q in player.quests if not q.is_completed]
+    completed_quests = [q for q in player.quests if q.is_completed]
+
+    context = {
+        'character_name': player.name,
+        'character_health': player.get_health(),
+        'character_gold': player.gold_pouch,
+        'active_quests': active_quests,
+        'completed_quests': completed_quests,
+    }
+    return render(request, 'game/quests.html', context)

@@ -3,49 +3,49 @@
 {% block title %}Journal{% endblock %}
 
 {% block menu_bar %}
-    <a href="{% url 'game_scene' %}" class="menu-button">Back to Game</a>
-    <a href="{% url 'inventory_view' %}" class="menu-button">Inventory</a>
-    <a href="{% url 'journal_view' %}" class="menu-button active">Journal</a>
-    <a href="#" class="menu-button disabled">Map</a>
-    <a href="#" class="menu-button disabled">Quests</a>
+<a href="{% url 'game_scene' %}" class="menu-button">Back to Game</a>
+<a href="{% url 'inventory_view' %}" class="menu-button">Inventory</a>
+<a href="{% url 'journal_view' %}" class="menu-button active">Journal</a>
+<a href="#" class="menu-button disabled">Map</a>
+<a href="{% url 'quests_view' %}" class="menu-button">Quests</a>
 {% endblock %}
 
 {% block main_content %}
-    <div class="main-scene">
-        <h2>Your Journal</h2>
-        <h3>Character Stats</h3>
-        <p><strong>Name:</strong> {{ character_name }}</p>
-        <p><strong>Health:</strong> {{ character_health }}</p>
-        <p><strong>Gold:</strong> {{ character_gold }}</p>
-        <p><strong>Attack Rating:</strong> {{ character_attack_rating }}</p>
-        <p><strong>Armour Rating:</strong> {{ character_armour_rating }}</p>
+<div class="main-scene">
+    <h2>Your Journal</h2>
+    <h3>Character Stats</h3>
+    <p><strong>Name:</strong> {{ character_name }}</p>
+    <p><strong>Health:</strong> {{ character_health }}</p>
+    <p><strong>Gold:</strong> {{ character_gold }}</p>
+    <p><strong>Attack Rating:</strong> {{ character_attack_rating }}</p>
+    <p><strong>Armour Rating:</strong> {{ character_armour_rating }}</p>
 
-        <h3>Story Log</h3>
-        <p>This is where past events and story progress will be recorded.</p>
-        <ul>
-            <li>Event 1: You started your adventure.</li>
-            <li>Event 2: You defeated a goblin.</li>
-            <li>Event 3: You found a rusty sword.</li>
-        </ul>
+    <h3>Story Log</h3>
+    <p>This is where past events and story progress will be recorded.</p>
+    <ul>
+        <li>Event 1: You started your adventure.</li>
+        <li>Event 2: You defeated a goblin.</li>
+        <li>Event 3: You found a rusty sword.</li>
+    </ul>
 
-        <h3>Reputation</h3>
-        <p>Your reputation with various factions will be shown here.</p>
-        <ul>
-            {% for faction, status in reputation.items %}
-                <li>{{ faction }}: {{ status }}</li>
-            {% endfor %}
-        </ul>
-    </div>
+    <h3>Reputation</h3>
+    <p>Your reputation with various factions will be shown here.</p>
+    <ul>
+        {% for faction, status in reputation.items %}
+        <li>{{ faction }}: {{ status }}</li>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock %}
 
 {% block sidebar %}
-    {# Journal page typically doesn't need a sidebar, or it could show character stats #}
-    <aside class="sidebar">
-        <div class="stat-box">
-            <h3>Character</h3>
-            <p><strong>Name:</strong> {{ character_name }}</p>
-            <p><strong>Health:</strong> <span class="health">{{ character_health }}</span></p>
-            <p><strong>Gold:</strong> {{ character_gold }}</p>
-        </div>
-    </aside>
+{# Journal page typically doesn't need a sidebar, or it could show character stats #}
+<aside class="sidebar">
+    <div class="stat-box">
+        <h3>Character</h3>
+        <p><strong>Name:</strong> {{ character_name }}</p>
+        <p><strong>Health:</strong> <span class="health">{{ character_health }}</span></p>
+        <p><strong>Gold:</strong> {{ character_gold }}</p>
+    </div>
+</aside>
 {% endblock %}
