@@ -1,5 +1,6 @@
 class Quest:
-    def __init__(self, name, description, target_item=None, reward_gold=0, is_completed=False):
+    def __init__(self, quest_id, name, description, target_item=None, reward_gold=0, is_completed=False):
+        self.quest_id = quest_id
         self.name = name
         self.description = description
         self.target_item = target_item

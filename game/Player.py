@@ -11,6 +11,7 @@ player_logger = logging.getLogger(__name__)
 
 class Player:
     base_attack_damage = 10
+    inventory_limit = 24
     def __init__(self, name, game):
         self.__health = 100
         self.__armour_slots = {"Helm": None, "Chest": None, "Trousers": None, "Boots": None}
@@ -96,6 +97,11 @@ class Player:
 
     def buy_weapon(self, weapon, price):
         if price <= self.gold_pouch:
+            # Check if we need space for the old weapon
+            if self.weapon and len(self.inventory) >= self.inventory_limit:
+                 self.game.messages.append("Inventory full! Cannot unequip current weapon.")
+                 return
+
             self.gold_pouch -= price
             self.equip_new_weapon(weapon)
             self.change_reputation("Shopkeepers", ReputationManager.BUY_ITEM)
@@ -159,7 +165,12 @@ class Player:
         return armour_protection // 3
 
     def add_item_to_inventory(self, item):
-        self.inventory.append(item)
+        if len(self.inventory) < self.inventory_limit:
+            self.inventory.append(item)
+            return True
+        else:
+            self.game.messages.append("Inventory full!")
+            return False
 
     def sell_all_inventory(self):
         if not self.inventory:
@@ -199,15 +210,15 @@ class Player:
         self.quests.append(quest)
         self.game.messages.append(f"Quest Accepted: {quest.name}")
 
-    def has_quest(self, quest_name):
+    def has_quest(self, quest_id):
         for quest in self.quests:
-            if quest.name == quest_name and not quest.is_completed:
+            if quest.quest_id == quest_id and not quest.is_completed:
                 return True
         return False
 
-    def complete_quest(self, quest_name):
+    def complete_quest(self, quest_id):
         for quest in self.quests:
-            if quest.name == quest_name and not quest.is_completed:
+            if quest.quest_id == quest_id and not quest.is_completed:
                 quest.complete()
                 self.add_gold_to_pouch(quest.reward_gold)
                 self.game.messages.append(f"Quest Completed: {quest.name}")
