@@ -4,60 +4,61 @@
 {% block title %}Current Scene{% endblock %}
 
 {% block menu_bar %}
-    <a href="{% url 'inventory_view' %}" class="menu-button">Inventory</a>
-    <a href="{% url 'journal_view' %}" class="menu-button">Journal</a>
-    <a href="#" class="menu-button disabled">Map</a>
-    <a href="#" class="menu-button disabled">Quests</a>
+<a href="{% url 'inventory_view' %}" class="menu-button">Inventory</a>
+<a href="{% url 'journal_view' %}" class="menu-button">Journal</a>
+<a href="#" class="menu-button disabled">Map</a>
+<a href="{% url 'quests_view' %}" class="menu-button">Quests</a>
 {% endblock %}
 
 {% block main_content %}
-    <div class="main-scene">
-        <h2>Current Scene</h2>
-        <div class="messages">
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
-        </div>
-
-        <div class="choices">
-            <h3>What do you do?</h3>
-            <ol>
-                {% for choice in choices %}
-                    <li><a href="{% url 'make_choice' scene_name=scene_name choice_index=forloop.counter %}">{{ choice }}</a></li>
-                {% empty %}
-                    <p>No choices available.</p>
-                {% endfor %}
-            </ol>
-        </div>
+<div class="main-scene">
+    <h2>Current Scene</h2>
+    <div class="messages">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
     </div>
+
+    <div class="choices">
+        <h3>What do you do?</h3>
+        <ol>
+            {% for choice in choices %}
+            <li><a href="{% url 'make_choice' scene_name=scene_name choice_index=forloop.counter %}">{{ choice }}</a>
+            </li>
+            {% empty %}
+            <p>No choices available.</p>
+            {% endfor %}
+        </ol>
+    </div>
+</div>
 {% endblock %}
 
 {% block sidebar %}
-    <aside class="sidebar">
-        <div class="stat-box">
-            <h3>Character</h3>
-            <p><strong>Name:</strong> {{ character_name }}</p>
-            <p><strong>Health:</strong> <span class="health">{{ character_health }}</span></p>
-            <p><strong>Gold:</strong> {{ character_gold }}</p>
-            <p><strong>Health Potions:</strong> {{ character_health_pots }}</p>
-            <p><strong>Attack Potions:</strong> {{ character_attack_pots }}</p>
-            <p><strong>Attack Rating:</strong> {{ character_attack_rating }}</p>
-            <p><strong>Armour Rating:</strong> {{ character_armour_rating }}</p>
-        </div>
+<aside class="sidebar">
+    <div class="stat-box">
+        <h3>Character</h3>
+        <p><strong>Name:</strong> {{ character_name }}</p>
+        <p><strong>Health:</strong> <span class="health">{{ character_health }}</span></p>
+        <p><strong>Gold:</strong> {{ character_gold }}</p>
+        <p><strong>Health Potions:</strong> {{ character_health_pots }}</p>
+        <p><strong>Attack Potions:</strong> {{ character_attack_pots }}</p>
+        <p><strong>Attack Rating:</strong> {{ character_attack_rating }}</p>
+        <p><strong>Armour Rating:</strong> {{ character_armour_rating }}</p>
+    </div>
 
-        <div class="stat-box inventory-box">
-            <h3>Inventory</h3>
-            <div class="inventory-grid">
-                {% for row in inventory_grid %}
-                    {% for item in row %}
-                        <div class="inventory-slot">
-                            {% if item and item.image %}
-                                <img src="{% static item.image %}" alt="{{ item.to_string }}" style="width: 100%; height: 100%;">
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-                {% endfor %}
+    <div class="stat-box inventory-box">
+        <h3>Inventory</h3>
+        <div class="inventory-grid">
+            {% for row in inventory_grid %}
+            {% for item in row %}
+            <div class="inventory-slot">
+                {% if item and item.image %}
+                <img src="{% static item.image %}" alt="{{ item.to_string }}" style="width: 100%; height: 100%;">
+                {% endif %}
             </div>
+            {% endfor %}
+            {% endfor %}
         </div>
-    </aside>
+    </div>
+</aside>
 {% endblock %}

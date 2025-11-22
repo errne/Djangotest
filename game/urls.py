@@ -11,4 +11,5 @@ urlpatterns = [
     path('choice/<str:scene_name>/<int:choice_index>/', views.make_choice, name='make_choice'),
     path('inventory/', views.inventory_view, name='inventory_view'),
     path('journal/', views.journal_view, name='journal_view'),
+    path('quests/', views.quests_view, name='quests_view'),
 ]
