@@ -23,6 +23,4 @@ class ThiefEnemy(Enemy):
     def on_death(self, player):
         player.change_reputation("Thieves Guild", -10)
         # We can't access game.messages directly here easily without passing game or having it on player/enemy
-        # But player has game reference usually? Let's check Player.py
-        # Player has self.game. So we can use player.game.messages
         player.game.messages.append("Your reputation with the Thieves Guild has decreased.")
