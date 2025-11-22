@@ -76,12 +76,20 @@ class QuestEvent:
         self.player = player
         self.game = game
         self.choices = ["Accept Quest", "Decline"]
+        self.heirlooms = [
+            "The Ivory Brooch",
+            "The Silver Cup",
+            "The Blackwood Statue",
+            "The Grandfather's Axe",
+            "The Book of Herbal Remedies"
+        ]
+        self.stolen_heirloom = random.choice(self.heirlooms)
 
     def event_greeting(self):
         return "A distraught villager approaches you."
 
     def event_task(self):
-        self.game.messages.append("Please, help me! Thieves stole my family heirloom. Can you retrieve it?")
+        self.game.messages.append(f"Please, help me! Thieves stole my family heirloom, **{self.stolen_heirloom}**. Can you retrieve it?")
         return {
             'choices': self.choices
         }
@@ -91,7 +99,9 @@ class QuestEvent:
 
     def check_answer(self, choice):
         if choice == "Accept Quest":
-            quest = Quest("Retrieve Heirloom", "Retrieve the stolen family heirloom from the Thieves Den.", reward_gold=100)
+            quest_name = f"Retrieve {self.stolen_heirloom}"
+            quest_desc = f"Retrieve the stolen family heirloom: {self.stolen_heirloom} from the Thieves Den."
+            quest = Quest("retrieve_heirloom", quest_name, quest_desc, reward_gold=75)
             self.player.add_quest(quest)
             self.game.messages.append("You accepted the quest!")
         else:

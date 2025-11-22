@@ -20,7 +20,7 @@ class World:
     def generate_next_stop(self):
         random_no = random.randint(1, 100)
         if random_no <= 50:
-            if self.player.has_quest("Retrieve Heirloom"):
+            if self.player.has_quest("retrieve_heirloom"):
                 # 50% chance to find the den if quest is active
                 if random.randint(0, 1) == 0:
                     room_event = ThievesDen(self.player, self.game)
@@ -55,7 +55,7 @@ class World:
 
     def generate_random_event(self):
         # Check if we should spawn the quest event
-        if not self.player.has_quest("Retrieve Heirloom") and not any(q.name == "Retrieve Heirloom" and q.is_completed for q in self.player.quests):
+        if not self.player.has_quest("retrieve_heirloom"):
              # 30% chance to get the quest if not already active/completed
              if random.randint(1, 100) <= 30:
                  return QuestEvent(self.player, self.game)

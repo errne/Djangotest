@@ -15,8 +15,8 @@ class ThievesDen(Room):
     def loot_treasure_chest(self):
         if self.player.is_alive:
             # Check for quest item
-            if self.player.has_quest("Retrieve Heirloom"):
+            if self.player.has_quest("retrieve_heirloom"):
                  self.game.messages.append("You found the Stolen Heirloom in the chest!")
-                 self.player.complete_quest("Retrieve Heirloom")
+                 self.player.complete_quest("retrieve_heirloom")
             
             super().loot_treasure_chest()
