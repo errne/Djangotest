@@ -81,7 +81,7 @@ class QuestEvent:
         return "A distraught villager approaches you."
 
     def event_task(self):
-        self.game.messages.append("Please, help me! Bandits stole my family heirloom. Can you retrieve it?")
+        self.game.messages.append("Please, help me! Thieves stole my family heirloom. Can you retrieve it?")
         return {
             'choices': self.choices
         }
